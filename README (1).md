@@ -1,206 +1,149 @@
-Яхункин К-ИСП 39-1 
-Лабораторная работа
-
 ![image](https://github.com/user-attachments/assets/c04e333d-d7cf-47dd-b5c8-1c774e8843d1)
 
+Для начала устанавливаем гостевые дополнения
+потом переходим к установке утилит 
+`sudo yum install wget`
 
+![image](https://github.com/user-attachments/assets/579dd3fb-ebb6-414d-8dd2-10fc7b86ad26)
 
-Установили Oracle linux
-Установили гостевые дополнения по инструкции: 
-[инструкция для VBoxGA.docx](https://github.com/user-attachments/files/18921020/VBoxGA.docx)
-Далее выполняем команды
-`sudo yum install wget` 
-
-![image](https://github.com/user-attachments/assets/417f85d3-2a1c-4f9e-9280-b7c0e27d61a2)
-
-Далее вводим команду для установки утилиты
 `sudo yum install curl`
 
-![image](https://github.com/user-attachments/assets/fa9e539b-01f3-4b15-800c-f7ee97abd34b)
+![image](https://github.com/user-attachments/assets/abc125b0-8ecb-4a7c-9d29-33368f0aa18e)
 
+скачиваем репозиторий `sudo wget -P /etc/yum.repos.d/ https://download.docker.com/linux/centos/docker-ce.repo`
 
-Далее скачиваем репозиторий
-`sudo wget -P /etc/yum.repos.d/ https://download.docker.com/linux/centos/docker-ce.repo`
+![image](https://github.com/user-attachments/assets/984f30ad-a6d1-41b0-8f55-ccaf88cdc5a3)
 
-![image](https://github.com/user-attachments/assets/696bb008-dfe3-48e8-aa6a-ccc71beafc14)
+устанавливаем докер `sudo yum install docker-ce docker-ce-cli containerd.io`
 
-устанавливаем docker
-`sudo yum install docker-ce docker-ce-cli containerd.io`
+![image](https://github.com/user-attachments/assets/b964c509-ef7c-4c53-8334-90b7952eef24)
 
-![image](https://github.com/user-attachments/assets/6971313d-55f8-4d21-8665-7b90fc06590f)
+разрешаем автозапукс `sudo systemctl enable docker --now`
 
-Запускаем и разрешаем автозапуск
-`sudo systemctl enable docker --now`
+![image](https://github.com/user-attachments/assets/bd53e912-2856-4a62-99fa-5d707b30baad)
 
-![image](https://github.com/user-attachments/assets/6d53d112-b3a4-4849-a365-c9434deba32e)
+проверяем версию докера и сохраняем ее в переменную `COMVER=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)`
 
-Получаем номер последней версии Docker Compose и сохраняем его в переменную COMVER
-`COMVER=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)`
+![image](https://github.com/user-attachments/assets/37f4a24c-37df-4232-8bfa-a02a0d7758ac)
 
-![image](https://github.com/user-attachments/assets/50d00f7d-ae97-433d-8448-dd24cbf7e65d)
+![image](https://github.com/user-attachments/assets/e146644a-633e-408f-8c1d-ed7b211e6618)
 
-вводим команду для копирования репозитория
-`git clone https://github.com/skl256/grafana_stack_for_docker.git`
+проверяем версию докера `docker-compose --version`
 
-![image](https://github.com/user-attachments/assets/4f1afdb3-afcf-4416-aeff-b76d1e347ce6)
+![image](https://github.com/user-attachments/assets/eaec1279-7ac0-4306-a1f3-e9f86240e8f4)
 
-Выдает ошибку вводим команду и со всем соглашаемся 
-`sudo yum install git-core`
-после снова вводим команду выше
+копируем репозиторий `git clone https://github.com/skl256/grafana_stack_for_docker.git`
 
-![image](https://github.com/user-attachments/assets/55908990-5fff-4313-82d9-4bf2f00a3170)
+![image](https://github.com/user-attachments/assets/874355b4-790c-4810-87d6-096c7d621195)
 
-переходим в другую папку
-`cd grafana_stack_for_docker`
+переходим в другую папку `cd grafana_stack_for_docker`
 
-![image](https://github.com/user-attachments/assets/28d6c339-3150-4d78-b5de-13e942fce7b1)
+![image](https://github.com/user-attachments/assets/e8079c6a-ea6d-4d56-a24a-6e499ff9ef4b)
 
-создаем новый дерикторий
-`sudo mkdir -p /mnt/common_volume/swarm/grafana/config`
-![image](https://github.com/user-attachments/assets/95c16f2e-2b2f-4bf4-9103-cab01e94b8d1)
+создаем новый репозиторий `sudo mkdir -p /mnt/common_volume/swarm/grafana/config`
 
-создаем директории для хранения данных Grafana и Prometheus
-`sudo mkdir -p /mnt/common_volume/grafana/{grafana-config,grafana-data,prometheus-data}`
+![image](https://github.com/user-attachments/assets/f630094c-c78b-439a-87b2-56015df1b028)
 
-![image](https://github.com/user-attachments/assets/02c12b87-adba-4621-b77e-1b1b943ba33f)
+создаем места для хранения графаны и пометеуса `sudo mkdir -p /mnt/common_volume/grafana/{grafana-config,grafana-data,prometheus-data}`
 
-создаём пустой файл с именем `grafana.ini` в указанном каталоге, если такого файла ещё нет.  Если файл уже существует, команда ничего не делает.
+![image](https://github.com/user-attachments/assets/52f855fa-fe89-4683-8c2f-b53e14bf5152)
 
-`touch /mnt/common_volume/grafana/grafana-config/grafana.ini`
+создаем пустой файл `touch /mnt/common_volume/grafana/grafana-config/grafana.ini`
 
-![image](https://github.com/user-attachments/assets/ddb2eb57-2479-4e04-b660-6c73188ca9a6)
+![image](https://github.com/user-attachments/assets/176d5d96-aa1b-48ec-b04f-bb302dbe9e67)
 
-копируем все файлы и подкаталоги из каталога `config/` в каталог `/mnt/common_volume/swarm/grafana/config/`
-`cp config/* /mnt/common_volume/swarm/grafana/config/`
+копируем все файлы с одного каталога в другой `cp config/* /mnt/common_volume/swarm/grafana/config/`
 
-![image](https://github.com/user-attachments/assets/f6974cb4-3543-4fe4-874f-9923320685a9)
+![image](https://github.com/user-attachments/assets/d3261f74-4611-4615-a942-c640cd3cceb1)
 
-переименовываем файл `grafana.yaml` в `docker-compose.yaml`
+переименовываем файл grafana.yaml в docker-compose.yaml
 `mv grafana.yaml docker-compose.yaml`
 
-![image](https://github.com/user-attachments/assets/3d807014-56ef-49b4-8e32-b63305198228)
+![image](https://github.com/user-attachments/assets/fd7a1c11-87cb-4a56-aae7-6f8650a150c6)
 
-поднимаем Docker Compose
-`sudo docker compose up -d`
+поднимаем докер `sudo docker compose up -d` 
 
-![image](https://github.com/user-attachments/assets/13d36e18-2036-48a6-8301-13939a7056a5)
+![image](https://github.com/user-attachments/assets/27f24588-b8e8-4535-9442-ec93da7a8dfb)
 
-![image](https://github.com/user-attachments/assets/27a49fc0-6177-48b9-84f7-344c1b22699c)
+вводим команду `sudo vi docker-compose.yaml` и переходим в файл
+вносим в него изменения и тоже самое елаем с другим файлом `sudo vi prometheus.yaml`
 
-вводим команду `sudo vi docker-compose.yaml`и переходим в файл
+переходим на сайт `localhost:3000`
+Пользователь и пароль: admin. - Код графаны 1816. - Код прометеуса: http://prometheus:9090.
 
-![image](https://github.com/user-attachments/assets/a487d4e8-bc4c-4c9d-b14a-ffcebc4d3b43)
-
-для того чтобы внести изменения нажимаем на клавиатуре insert
-для того чтобы сохранить нажимаем Esc и вводим wp!
-вводим `node-exporter` после слова `services`
-
-![image](https://github.com/user-attachments/assets/381b43d5-bf2b-4986-a461-510eacd1e419)
-
-открываем файл prometheus.yaml
-`sudo vi prometheus.yaml`
-и меняем там /mnt/common_volume/swarm/grafana/config/prometheus.yaml -  на exporter:9100
-
-Далее переходим на работу с Grafana
-переходим на сайт localhost:3000. - Пользователь и пароль: admin. - Код графаны 1816. - Код прометеуса: http://prometheus:9090.
-
-![image](https://github.com/user-attachments/assets/d29cf7a6-17e6-4dec-8ec9-4bab9042a95a)
-
+![image](https://github.com/user-attachments/assets/051d8127-fbcb-4e7c-9b01-28c4ded4c58a)
 
 Создаем новый Dashboard
 
-![image](https://github.com/user-attachments/assets/a6ca9283-f832-4a36-9f20-2d70c4e97e04)
+![image](https://github.com/user-attachments/assets/3ea83ca8-5099-4ca3-8214-99145c8eb593)
+![image](https://github.com/user-attachments/assets/eeae326b-98ab-40f0-b098-7bc63f33d653)
 
-Далее создаем визуализацию
+далее выбираем визуализацию
 
-![image](https://github.com/user-attachments/assets/3a1c545e-dd4f-4b31-9104-4b01e0021932)
+![image](https://github.com/user-attachments/assets/fbf28b6b-9482-45e9-a136-5e8c3656ecd2)
 
- нажимаем на данную кнопку 
- 
- ![image](https://github.com/user-attachments/assets/88612c4f-0d78-48ec-bd28-501260fd0d36)
+нажимаем синию кнопку 
 
- из предоставленного меню выбираем Prometheus
- ![image](https://github.com/user-attachments/assets/16011d77-5f71-4432-81b9-831c8fe6c8ec)
+![image](https://github.com/user-attachments/assets/119eea07-ec91-46f4-870b-c6c35ff3365e)
 
- вставляем код прометеуса
- ![image](https://github.com/user-attachments/assets/c77c799a-54a0-4a1f-938d-ed9a357bcdca)
+выбираем прометеус
 
- в разделе authentication меняем `No authentication` на `basic authentication`
- 
-![image](https://github.com/user-attachments/assets/d06d4bb1-31b7-4134-96da-1ad69f3f585f)
+![image](https://github.com/user-attachments/assets/734f9ee4-33d8-4616-ba0c-5dc781c92cce)
 
-сохраняем и смотри все ли хорошо 
-![image](https://github.com/user-attachments/assets/967a704c-572d-42ae-b128-5ae825ec659b)
+заполняем как на фото
 
-возвращаемся на пару шагов назад и нажимаем вместо `Add visualisation`   `import`
+![image](https://github.com/user-attachments/assets/80bb0aa5-9dfa-466b-9529-e8c8ee5e2f3b)
+![image](https://github.com/user-attachments/assets/ec9313da-30e0-40d0-8243-270b8805fb60)
 
-и вводим 
+возвращаемся на пару шагов назад и вместо визуализации выбираем импортирование
 
-![image](https://github.com/user-attachments/assets/167d4d85-c661-4a78-a389-a11474759266)
+![image](https://github.com/user-attachments/assets/4084c58c-6fc0-42c3-b26c-8758a82c4352)
 
-далее выбираем import
+вводим код 
 
-![image](https://github.com/user-attachments/assets/16f0b5c2-882f-4871-be5a-0bae49f5d6eb)
+![image](https://github.com/user-attachments/assets/4ed243e0-a0d1-4740-8946-b7d924ff4c3b)
 
-далее видим результат
-![image](https://github.com/user-attachments/assets/71caad82-8c2a-4a70-bfda-97dc409024ad)
+заполняем все и нажимаем ипорт
 
+![image](https://github.com/user-attachments/assets/dc5da381-31c0-4245-b1d5-d8c5fc6c5f7b)
+![image](https://github.com/user-attachments/assets/eaf9e709-a797-4087-aa90-242259c0fb30)
 
-Далее пойдет работа с Victoria Metrics
-переходим на сайт `localhosr:8428`
+далее переходим на сайт localhost:8428 и на сайт localhost:9090
 
-![image](https://github.com/user-attachments/assets/1a2a669f-19bc-4d7c-baa1-2281c5b9b5a6)
+создаем викторию метрикс по той же инструкции что и прометеус только меняем код прометеуса и ставим No autentification
 
-также переходим на сайт `localhost:9090`
+![image](https://github.com/user-attachments/assets/a8b52d66-d3a4-46a3-a3a6-c65bd83b39e4)
 
-![image](https://github.com/user-attachments/assets/481b3131-1dec-46dc-9a1a-5a2f43c49755)
+возвращаемся назад и открываем то что создали
 
+![image](https://github.com/user-attachments/assets/18fa0746-13d4-40b3-a9b3-b75a44e4bd91)
 
-Victoria Metrics создаем также как и Prometheus только меняем URl на `http://victoriametrics:8428` и ставим `No autentification`
+в терминале вводим `echo -e "# TYPE light_metric1 gauge\nlight_metric1 0" | curl --data-binary @- http://localhost:8428/api/v1/import/prometheus `
 
-![image](https://github.com/user-attachments/assets/7f13072f-8373-413f-822c-8275cc5dfc28)
+Потом переходим на Victoria metrics и выбираем `vmui`
+в строке вводим `light_metric1`
 
-далее возращаемся на пару шагов назад и выбираем имя которое мы указали 
+![image](https://github.com/user-attachments/assets/5cafd310-b36e-4ce8-81b4-1053cfe773c4)
 
-![image](https://github.com/user-attachments/assets/1ca6607d-2557-4b24-97ea-12b47e194658)
+переходим в графану и тоже самое пишем в строке 
 
-выбираем и смоотрим результат
-
-![image](https://github.com/user-attachments/assets/469260d2-07b6-45a7-b1fe-c64cd9bb6d27)
-
-далее вводим команду `echo -e "# TYPE light_metric1 gauge\nlight_metric1 0" | curl --data-binary @- http://localhost:8428/api/v1/import/prometheus
-`
-
-![image](https://github.com/user-attachments/assets/81704c11-6cdc-4155-a333-3c7407fc29b3)
+![image](https://github.com/user-attachments/assets/d9cb1a9d-abd1-4b0a-8dc6-fbde0c489f8f)
 
 
-Потом переходим на Victoria metrics и выбираем ``vmui
-
-![image](https://github.com/user-attachments/assets/5723cc83-d324-4085-948c-4c4974d39eb9)
 
 
-вводим в строку `light_metric1` 
-
-![image](https://github.com/user-attachments/assets/4f4c19ba-a38e-45ae-bb80-1921533a6be5)
-
-Видим результат
-
-![image](https://github.com/user-attachments/assets/f65623fb-ee19-4ac7-9caf-3205dda5e9b9)
 
 
-переходим обратно в grafana и вставляем в строку `light_metric1` и нажимаем `Run queries`
-
-![image](https://github.com/user-attachments/assets/10f79e80-fd9a-4765-a473-4d604fcfb786)
 
 
-Далее воздаем ноую виртуал для дальнейших работ.
-Устанавливаем гостевые дополнения и вводим все те же команды `sudo yum install wget`
 
-![image](https://github.com/user-attachments/assets/aea957c3-e827-4761-a8a0-02fd475ba8f2)
 
-`sudo yum install curl`
 
-![image](https://github.com/user-attachments/assets/22f36be4-5b52-46d8-b973-6a80d798d3e6)
+
+
+
+
+
 
 
 
